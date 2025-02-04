@@ -4,8 +4,23 @@
 <p>Status: <span id="ride-status">{{ ride.status }}</span></p>
 <p>Driver: <span id="ride-driver">{% if ride.driver %}{{ ride.driver.username }}{% else %}Waiting for driver...{% endif %}</span></p>
 
-{% if ride.status == 'completed' %}
-    <p>Ride completed. Thank you for using our service!</p>
+<!-- Dynamic Dashboard Link -->
+{% if request.user.profile.is_driver %}
+    <a href="{% url 'driver_pannel' %}">Back to Driver Panel</a>
+{% else %}
+    <a href="{% url 'rider_pannel' %}">Back to Rider Panel</a>
 {% endif %}
 
-<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+<!-- Cancel Ride Button -->
+{% if ride.status in allowed_status and request.user == ride.rider %}
+    <form action="{% url 'cancel_ride' ride.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Cancel Ride</button>
+    </form>
+{% endif %}
+
+{% if ride.status == 'completed' %}
+    <p>Ride completed. Thank you for using our service!</p>
+{% elif ride.status == 'cancelled' %}
+    <p>Ride cancelled.</p>
+{% endif %}

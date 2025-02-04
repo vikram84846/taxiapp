@@ -28,7 +28,7 @@ def register(request):
 @login_required
 def dashboard(request):
     if request.user.profile.is_driver:
-        return redirect("driver_pannel")
+        return redirect('driver_pannel')
     else:
         return redirect('rider_pannel')
     
@@ -37,7 +37,7 @@ def dashboard(request):
 def driver_pannel(request):
     if request.user.profile.is_driver:
         active_ride = Ride.objects.filter(driver=request.user, status='accepted').first()
-        return render(request, 'driver_panel.html', {'active_ride': active_ride})
+        return render(request, 'driver_pannel.html', {'active_ride': active_ride})
     else:
         return redirect('dashboard')
 
@@ -47,7 +47,9 @@ def driver_pannel(request):
 
 @login_required
 def rider_pannel(request):
-    return render(request,"rider_pannel.html")
+    allowed_status = ['requested', 'accepted']
+    active_ride = Ride.objects.filter(rider=request.user, status__in=allowed_status).first()
+    return render(request, 'rider_pannel.html', {'active_ride': active_ride,"allowed_status":allowed_status})
 
 
 

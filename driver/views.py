@@ -18,7 +18,7 @@ def toggle_availability(request):
 @login_required
 def available_rides(request):
     if request.user.profile.is_driver:
-        rides = Ride.objects.filter(status='requested')
+        rides = Ride.objects.filter(status='requested')  # Only show requested rides
         return render(request, 'available_rides.html', {'rides': rides})
     else:
         return redirect('dashboard')

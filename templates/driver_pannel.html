@@ -8,19 +8,29 @@
     </button>
 </form>
 
+<!-- Navigation Links -->
+<a href="{% url 'available_rides' %}">View Available Rides</a> | 
+<a href="{% url 'driver_pannel' %}">Driver Panel</a> | 
+<a href="{% url 'logout' %}">Logout</a>
+
+<hr>
+
 <h3>Your Active Ride</h3>
 {% if active_ride %}
     <p>Ride ID: {{ active_ride.id }}</p>
     <p>Pickup Location: {{ active_ride.pickup_location }}</p>
     <p>Destination: {{ active_ride.destination }}</p>
     <p>Status: {{ active_ride.status }}</p>
-    <form action="{% url 'complete_ride' active_ride.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Complete Ride</button>
-    </form>
+    {% if active_ride.status == 'accepted' %}
+        <form action="{% url 'cancel_ride' active_ride.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Cancel Ride</button>
+        </form>
+        <form action="{% url 'complete_ride' active_ride.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Complete Ride</button>
+        </form>
+    {% endif %}
 {% else %}
     <p>No active rides.</p>
 {% endif %}
-
-<a href="{% url 'available_rides' %}">View Available Rides</a>
-<a href="{% url 'logout' %}">Logout</a>
