@@ -1,0 +1,26 @@
+<h2>Driver Panel</h2>
+<p>Welcome, {{ user.username }}! You are a driver.</p>
+<p>Availability: {% if user.profile.is_available %}Available{% else %}Not Available{% endif %}</p>
+<form action="{% url 'toggle_availability' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">
+        {% if user.profile.is_available %}Go Offline{% else %}Go Online{% endif %}
+    </button>
+</form>
+
+<h3>Your Active Ride</h3>
+{% if active_ride %}
+    <p>Ride ID: {{ active_ride.id }}</p>
+    <p>Pickup Location: {{ active_ride.pickup_location }}</p>
+    <p>Destination: {{ active_ride.destination }}</p>
+    <p>Status: {{ active_ride.status }}</p>
+    <form action="{% url 'complete_ride' active_ride.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Complete Ride</button>
+    </form>
+{% else %}
+    <p>No active rides.</p>
+{% endif %}
+
+<a href="{% url 'available_rides' %}">View Available Rides</a>
+<a href="{% url 'logout' %}">Logout</a>

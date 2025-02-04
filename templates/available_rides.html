@@ -1,0 +1,15 @@
+<h2>Available Rides</h2>
+{% if rides %}
+    <ul>
+        {% for ride in rides %}
+            <li>
+                <p>Pickup: {{ ride.pickup_location }}</p>
+                <p>Destination: {{ ride.destination }}</p>
+                <a href="{% url 'accept_ride' ride.id %}">Accept Ride</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No available rides at the moment.</p>
+{% endif %}
+<a href="{% url 'driver_pannel' %}">Back to Driver Panel</a>
