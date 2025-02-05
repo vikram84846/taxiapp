@@ -1,36 +1,63 @@
-<h2>Driver Panel</h2>
-<p>Welcome, {{ user.username }}! You are a driver.</p>
-<p>Availability: {% if user.profile.is_available %}Available{% else %}Not Available{% endif %}</p>
-<form action="{% url 'toggle_availability' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">
-        {% if user.profile.is_available %}Go Offline{% else %}Go Online{% endif %}
-    </button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Ride Booking</a>
+        </div>
+    </nav>
 
-<!-- Navigation Links -->
-<a href="{% url 'available_rides' %}">View Available Rides</a> | 
-<a href="{% url 'driver_pannel' %}">Driver Panel</a> | 
-<a href="{% url 'logout' %}">Logout</a>
-
-<hr>
-
-<h3>Your Active Ride</h3>
-{% if active_ride %}
-    <p>Ride ID: {{ active_ride.id }}</p>
-    <p>Pickup Location: {{ active_ride.pickup_location }}</p>
-    <p>Destination: {{ active_ride.destination }}</p>
-    <p>Status: {{ active_ride.status }}</p>
-    {% if active_ride.status == 'accepted' %}
-        <form action="{% url 'cancel_ride' active_ride.id %}" method="post">
+    <div class="container mt-4">
+        <h2 class="mb-3">Driver Panel</h2>
+        <p class="lead">Welcome, {{ user.username }}! You are a driver.</p>
+        <p><strong>Availability:</strong> <span class="badge {% if user.profile.is_available %}bg-success{% else %}bg-danger{% endif %}">
+            {% if user.profile.is_available %}Available{% else %}Not Available{% endif %}
+        </span></p>
+        
+        <form action="{% url 'toggle_availability' %}" method="post">
             {% csrf_token %}
-            <button type="submit">Cancel Ride</button>
+            <button type="submit" class="btn {% if user.profile.is_available %}btn-danger{% else %}btn-success{% endif %}">
+                {% if user.profile.is_available %}Go Offline{% else %}Go Online{% endif %}
+            </button>
         </form>
-        <form action="{% url 'complete_ride' active_ride.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Complete Ride</button>
-        </form>
-    {% endif %}
-{% else %}
-    <p>No active rides.</p>
-{% endif %}
+
+        <div class="mt-3">
+            <a href="{% url 'available_rides' %}" class="btn btn-primary">View Available Rides</a>
+            <a href="{% url 'driver_pannel' %}" class="btn btn-secondary">Driver Panel</a>
+            <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+        </div>
+
+        <hr>
+
+        <h3>Your Active Ride</h3>
+        {% if active_ride %}
+            <div class="card p-3 shadow-sm">
+                <p><strong>Ride ID:</strong> {{ active_ride.id }}</p>
+                <p><strong>Pickup Location:</strong> {{ active_ride.pickup_location }}</p>
+                <p><strong>Destination:</strong> {{ active_ride.destination }}</p>
+                <p><strong>Status:</strong> {{ active_ride.status }}</p>
+                {% if active_ride.status == 'accepted' %}
+                    <form action="{% url 'cancel_ride' active_ride.id %}" method="post" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Cancel Ride</button>
+                    </form>
+                    <form action="{% url 'complete_ride' active_ride.id %}" method="post" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Complete Ride</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">No active rides.</div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
