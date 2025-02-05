@@ -42,3 +42,7 @@ class Ride(models.Model):
 
     def __str__(self):
         return f"Ride {self.id} - {self.status}"
+    
+    def calculate_fare(self):
+        # Example: Fixed fare of $10
+        return 25.00
